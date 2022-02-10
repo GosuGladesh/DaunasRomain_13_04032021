@@ -2,10 +2,11 @@ import React from "react";
 import Footer from "../../components/Footer";
 import Nav from "../../components/Nav";
 
-import { add_user_info, store } from "../../store";
+import { fetchUserData, putNewName} from "../../services";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useSelector } from 'react-redux'
+import {  useNavigate } from "react-router-dom";
 
 function Profile(props) {
 
@@ -14,71 +15,27 @@ function Profile(props) {
   const [firstName, setFirstNames] = useState("")
   const [lastName, setLastName] = useState("") 
 
+  const navigate = useNavigate()
+
   const username = useSelector((state) => state.firstName +" "+ state.lastName)
   const token = useSelector((state) => state.token) 
   
 
   useEffect(() => {
-    fetchUserData();
+    if (!token) {
+      navigate("/")
+    }
+    fetchUserData(token);
   }, []
   );
  
-  function fetchUserData() {
-    var myHeaders = new Headers();
-    let myToken = token
-    myHeaders.append("Authorization", "Bearer " + myToken);
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      redirect: 'follow'
-    };
-
-    fetch("http://127.0.0.1:3001/api/v1/user/profile", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        store.dispatch(add_user_info(result.body.firstName, result.body.lastName))
-      })
-      .catch(error => console.log('error', error));
-  }
-
   function editName() {
    setEditName({edit: !state.edit})
   }
+
   function editNamePost() {
-
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", "Bearer" + token);
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({
-      "firstName": firstName,
-      "lastName": lastName
-    });
-
-    var requestOptions = {
-      method: 'PUT',
-      headers: myHeaders,
-      body: raw,
-      redirect: 'follow'
-    };
-
-    // Resource
-    // http://monapi.com/posts -> POST -> CREATE de post
-    // http://monapi.com/posts -> GET -> Liste de posts
-    // http://monapi.com/posts/12 -> GET -> Un post
-    // http://monapi.com/posts/12 -> PUT -> Un update
-    // http://monapi.com/posts/12 -> DELETE -> Un update
-
-    fetch("http://127.0.0.1:3001/api/v1/user/profile", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        console.log(result);
-        if (result.status === 200) {
-          fetchUserData()
-        }
-        editName()
-      })
-      .catch(error => console.log('error', error));
+    putNewName(token, firstName, lastName)
+    .then( () => editName())
   }
   
   return (

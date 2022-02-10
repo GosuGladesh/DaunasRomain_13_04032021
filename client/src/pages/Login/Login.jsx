@@ -5,10 +5,8 @@ import Nav from "../../components/Nav";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-import { login_action, store } from "../../store";
+import { loginUser } from "../../services";
 
-// Déplacer fetch vers le store
-// Utiliser le state pour recupérer les valeur du formulaire
 
 function Login(props) {
   
@@ -16,34 +14,10 @@ function Login(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
-  //tony@stark.com
-  //password123
+  
   function handleSubmit(e) {
     e.preventDefault()
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({
-      "email": email,
-      "password": password
-    });
-
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw,
-      redirect: 'follow'
-    };
-
-    fetch("http://127.0.0.1:3001/api/v1/user/login", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        window.localStorage.setItem("token", result.body.token)
-        store.dispatch(login_action(result.body.token));
-        
-      })
-      .then( () => navigate('/profile'))
-      .catch(error => console.log('error', error)); 
+    loginUser(email, password, navigate('/profile'))
   }
   
     return (
