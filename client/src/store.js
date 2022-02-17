@@ -46,7 +46,10 @@ function loginReducer(state = initialSate, action) {
     case "LOGOUT_ACTION":
       return {
         ...state,
-        isConnected: false
+        isConnected: false,
+        firstName: "",
+        lastName: "",
+        token: ""
       }
     default :
     return state;

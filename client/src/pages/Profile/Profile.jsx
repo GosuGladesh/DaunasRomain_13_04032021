@@ -17,12 +17,13 @@ function Profile(props) {
 
   const navigate = useNavigate()
 
-  const username = useSelector((state) => state.firstName +" "+ state.lastName)
-  const token = useSelector((state) => state.token) 
+  const username = useSelector((state) => state.firstName + " " + state.lastName)
+  const token = useSelector((state) => state.token)
+  const connected = useSelector( (state) => state.isConnected)
   
 
   useEffect(() => {
-    if (!token) {
+    if (!connected) {
       navigate("/")
     }
     fetchUserData(token);

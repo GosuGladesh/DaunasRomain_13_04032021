@@ -17,7 +17,7 @@ function Login(props) {
   
   function handleSubmit(e) {
     e.preventDefault()
-    loginUser(email, password, navigate('/profile'))
+    loginUser(email, password, navigate)
   }
   
     return (

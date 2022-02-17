@@ -16,7 +16,6 @@ export default function Nav(props) {
   let username = useSelector((state) => state.firstName)
   
   function logout() {
-    window.localStorage.removeItem("token");
     store.dispatch(logout_action());
     navigate("/");
   }
@@ -43,8 +42,7 @@ export default function Nav(props) {
     </nav>
     )
   }
-  else {
-    
+  else {    
     return (
         <nav class="main-nav">
       <Link class="main-nav-logo" to="/">

@@ -19,7 +19,7 @@ function fetchUserData(token) {
 }
 
 //POST /login
-function loginUser(email, password, navigate) {
+async function loginUser(email, password, navigate) {
       
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -40,8 +40,8 @@ function loginUser(email, password, navigate) {
       .then(result => {
         window.localStorage.setItem("token", result.body.token)
         store.dispatch(login_action(result.body.token));
+        navigate("/profile");
       })
-      .then(navigate)
       .catch(error => console.log('error', error));     
 }
 
